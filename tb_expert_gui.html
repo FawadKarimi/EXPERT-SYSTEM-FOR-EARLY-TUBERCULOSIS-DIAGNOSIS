@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TB Expert System — Professional Medical Diagnostic Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Sans+Pro:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ==================== DESIGN SYSTEM ==================== */
+    :root {
+      /* Medical Color Palette */
+      --primary: #0369a1;
+      --primary-dark: #075985;
+      --primary-light: #0ea5e9;
+      --secondary: #0891b2;
+      --accent: #06b6d4;
+
+      /* Severity Colors */
+      --critical: #dc2626;
+      --high: #ea580c;
+      --moderate: #f59e0b;
+      --low: #10b981;
+
+      /* Neutrals */
+      --bg-primary: #f0f9ff;
+      --bg-secondary: #e0f2fe;
+      --surface: #ffffff;
+      --surface-elevated: #ffffff;
+      --border: #bae6fd;
+      --border-light: #e0f2fe;
+
+      /* Text */
+      --text-primary: #0c4a6e;
+      --text-secondary: #075985;
+      --text-muted: #64748b;
+      --text-inverse: #ffffff;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(3, 105, 161, 0.08);
+      --shadow-md: 0 4px 12px rgba(3, 105, 161, 0.12);
+      --shadow-lg: 0 10px 30px rgba(3, 105, 161, 0.15);
+      --shadow-xl: 0 20px 50px rgba(3, 105, 161, 0.2);
+
+      /* Spacing */
+      --spacing-xs: 8px;
+      --spacing-sm: 12px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-2xl: 48px;
+
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+
+      /* Typography */
+      --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-content: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ==================== GLOBAL STYLES ==================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: var(--spacing-lg);
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ==================== LAYOUT ==================== */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-lg);
+      margin-bottom: var(--spacing-lg);
+      border: 1px solid var(--border-light);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      text-align: center;
+      padding: var(--spacing-2xl) var(--spacing-lg);
+      background-image:
+        linear-gradient(rgba(3, 105, 161, 0.6), rgba(8, 145, 178, 0.6)),
+        url('banner.jpg');
+      background-size: cover;
+      background-position: center;
+      border-radius: var(--radius-xl);
+      color: var(--text-inverse);
+      box-shadow: var(--shadow-lg);
+      margin-bottom: var(--spacing-xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.35), transparent 60%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .header-icon {
+      font-size: 48px;
+      margin-bottom: var(--spacing-sm);
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    }
+
+    .header h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      position: relative;
+      z-index: 1;
+    }
+
+    .header .subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      opacity: 0.95;
+      font-family: var(--font-content);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==================== PATIENT INFO ==================== */
+    .patient-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-ui);
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: var(--surface);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.1);
+    }
+
+    /* ==================== SECTION HEADERS ==================== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 3px solid var(--border);
+    }
+
+    .section-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .section-header .badge {
+      background: var(--primary);
+      color: var(--text-inverse);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ==================== SYMPTOM CATEGORIES ==================== */
+    .symptom-category {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .category-header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+      border-left: 4px solid var(--primary);
+    }
+
+    .category-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .category-icon {
+      font-size: 24px;
+    }
+
+    .symptom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    /* ==================== SYMPTOM TOGGLE ==================== */
+    .symptom-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-md);
+      background: var(--surface);
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .symptom-item:hover {
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-sm);
+      transform: translateX(4px);
+    }
+
+    .symptom-item.active {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .symptom-info {
+      flex: 1;
+    }
+
+    .symptom-id {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .symptom-desc {
+      font-family: var(--font-content);
+      color: var(--text-secondary);
+      font-size: 15px;
+      margin-top: 4px;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      width: 60px;
+      height: 32px;
+      background: #cbd5e1;
+      border-radius: 16px;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .symptom-item.active .toggle-switch {
+      background: var(--primary);
+    }
+
+    .symptom-item.active .toggle-switch::after {
+      transform: translateX(28px);
+    }
+
+    /* ==================== ACTION PANEL ==================== */
+    .action-panel {
+      display: flex;
+      gap: var(--spacing-md);
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-xl);
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      border-radius: var(--radius-lg);
+      margin: var(--spacing-xl) 0;
+    }
+
+    .btn {
+      padding: var(--spacing-md) var(--spacing-xl);
+      font-family: var(--font-ui);
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--text-inverse);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #64748b;
+      color: var(--text-inverse);
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: var(--text-inverse);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ==================== RESULTS ==================== */
+    .results-container {
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-header {
+      text-align: center;
+      padding: var(--spacing-lg);
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: var(--text-inverse);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      margin: -var(--spacing-xl) -var(--spacing-xl) var(--spacing-lg);
+    }
+
+    .result-header h3 {
+      font-size: 28px;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .download-section {
+      text-align: center;
+      margin: var(--spacing-md) 0;
+      padding: var(--spacing-md);
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-radius: var(--radius-md);
+    }
+
+    .result-item {
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+      border-left: 6px solid;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .result-item:hover {
+      transform: translateX(8px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .result-item.critical {
+      border-color: var(--critical);
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    }
+
+    .result-item.high {
+      border-color: var(--high);
+      background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+    }
+
+    .result-item.moderate {
+      border-color: var(--moderate);
+      background: linear-gradient(135deg, #fffbeb 0%, #fde68a 100%);
+    }
+
+    .result-item.low {
+      border-color: var(--low);
+      background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%);
+    }
+
+    .result-diagnosis {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-primary);
+    }
+
+    .result-metrics {
+      display: flex;
+      gap: var(--spacing-lg);
+      margin: var(--spacing-md) 0;
+      flex-wrap: wrap;
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .certainty-bar {
+      width: 100%;
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: var(--spacing-sm) 0;
+    }
+
+    .certainty-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+      transition: width 1s ease-out;
+      border-radius: 6px;
+    }
+
+    .recommendation {
+      padding: var(--spacing-md);
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius-sm);
+      margin-top: var(--spacing-md);
+      font-family: var(--font-content);
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .recommendation-icon {
+      font-size: 24px;
+    }
+
+    /* ==================== FOOTER ==================== */
+    .footer {
+      text-align: center;
+      padding: var(--spacing-xl);
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      border-radius: var(--radius-lg);
+      margin-top: var(--spacing-xl);
+      border: 2px solid var(--border-light);
+    }
+
+    .disclaimer {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-md);
+      font-family: var(--font-content);
+      color: #92400e;
+      font-weight: 600;
+    }
+
+    .footer-info {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+      body {
+        padding: var(--spacing-sm);
+      }
+
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .header .subtitle {
+        font-size: 16px;
+      }
+
+      .symptom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .patient-info {
+        grid-template-columns: 1fr;
+      }
+
+      .action-panel {
+        flex-direction: column;
+      }
+
+      .result-metrics {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+    }
+
+    /* ==================== LOADING STATE ==================== */
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-icon">🏥</div>
+      <h1>TB Expert System</h1>
+      <p class="subtitle">Professional Medical Diagnostic Tool for Tuberculosis Assessment</p>
+    </div>
+
+    <!-- Patient Information -->
+    <div class="card">
+      <div class="section-header">
+        <h2>Patient Information</h2>
+        <span class="badge">Optional</span>
+      </div>
+      <div class="patient-info">
+        <div class="form-group">
+          <label for="patientId">Patient ID</label>
+          <input type="text" id="patientId" placeholder="e.g., TB-2025-001">
+        </div>
+        <div class="form-group">
+          <label for="patientAge">Age</label>
+          <input type="number" id="patientAge" placeholder="e.g., 45" min="0" max="120">
+        </div>
+        <div class="form-group">
+          <label for="patientGender">Gender</label>
+          <select id="patientGender">
+            <option value="">Select...</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Symptom Assessment -->
+    <div class="card">
+      <div class="section-header">
+        <h2>Symptom Assessment</h2>
+        <span class="badge" id="symptomCount">0 / 15 Selected</span>
+      </div>
+
+      <!-- Primary TB Indicators -->
+      <div class="symptom-category">
+        <div class="category-header">
+          <h3><span class="category-icon">🔴</span> Primary TB Indicators</h3>
+        </div>
+        <div class="symptom-grid" id="category-primary"></div>
+      </div>
+
+      <!-- Respiratory Symptoms -->
+      <div class="symptom-category">
+        <div class="category-header">
+          <h3><span class="category-icon">🫁</span> Respiratory Symptoms</h3>
+        </div>
+        <div class="symptom-grid" id="category-respiratory"></div>
+      </div>
+
+      <!-- Systemic Symptoms -->
+      <div class="symptom-category">
+        <div class="category-header">
+          <h3><span class="category-icon">🌡️</span> Systemic Symptoms</h3>
+        </div>
+        <div class="symptom-grid" id="category-systemic"></div>
+      </div>
+
+      <!-- Risk Factors -->
+      <div class="symptom-category">
+        <div class="category-header">
+          <h3><span class="category-icon">⚠️</span> Risk Factors & Other</h3>
+        </div>
+        <div class="symptom-grid" id="category-risk"></div>
+      </div>
+    </div>
+
+    <!-- Action Panel -->
+    <div class="action-panel">
+      <button class="btn btn-primary" id="diagBtn">
+        <span>🔬</span>
+        <span>Run Diagnosis</span>
+        <span class="spinner hidden" id="spinner"></span>
+      </button>
+      <button class="btn btn-secondary" id="resetBtn">
+        <span>🔄</span>
+        <span>Reset All</span>
+      </button>
+    </div>
+
+    <!-- Results -->
+    <div id="output"></div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="disclaimer">
+        ⚠️ <strong>Medical Disclaimer:</strong> This tool is for educational purposes only and is not a medical device.
+        Always consult a qualified healthcare professional for proper diagnosis and treatment.
+      </div>
+      <div class="footer-info">
+        <p><strong>TB Expert System v2.0</strong> — Powered by Karimi</p>
+        <p>Based on clinical guidelines and certainty factor methodology</p>
+        <p>© 2025 AI Research. For research and educational use only.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== DATA STRUCTURES ====================
+    const SYMPTOMS = [
+      ['g1', 'Persistent cough lasting more than 2-3 weeks', 0.9, 'respiratory'],
+      ['g2', 'Coughing up blood or bloody sputum (hemoptysis)', 1.0, 'primary'],
+      ['g3', 'Chest pain during breathing or coughing', 0.7, 'respiratory'],
+      ['g4', 'Unexplained weight loss (>5kg in last 3 months)', 0.8, 'systemic'],
+      ['g5', 'Night sweats (soaking sheets)', 0.8, 'systemic'],
+      ['g6', 'Persistent fever (>2 weeks)', 0.7, 'systemic'],
+      ['g7', 'Loss of appetite', 0.5, 'systemic'],
+      ['g8', 'Fatigue and weakness', 0.5, 'systemic'],
+      ['g9', 'Shortness of breath', 0.6, 'respiratory'],
+      ['g10', 'Swollen lymph nodes', 0.6, 'risk'],
+      ['g11', 'History of TB contact or exposure', 0.85, 'risk'],
+      ['g12', 'Productive cough with phlegm', 0.7, 'respiratory'],
+      ['g13', 'Hoarseness or voice changes', 0.5, 'respiratory'],
+      ['g14', 'Chills and shaking', 0.6, 'systemic'],
+      ['g15', 'Back pain (possible spinal TB)', 0.7, 'risk']
+    ];
+
+    const RULES = [
+      ['r1', ['g2', 'g1', 'g4', 'g5'], 'High Probability Active Pulmonary TB - URGENT', 0.95],
+      ['r2', ['g1', 'g4', 'g5', 'g6', 'g11'], 'High Probability Active Pulmonary TB - URGENT', 0.90],
+      ['r3', ['g2', 'g3', 'g6', 'g12'], 'High Probability Active Pulmonary TB - URGENT', 0.88],
+      ['r4', ['g1', 'g4', 'g5'], 'Moderate Probability TB - Further Testing Required', 0.75],
+      ['r5', ['g1', 'g6', 'g12', 'g11'], 'Moderate Probability TB - Further Testing Required', 0.72],
+      ['r6', ['g3', 'g4', 'g5', 'g6'], 'Moderate Probability TB - Further Testing Required', 0.70],
+      ['r7', ['g1', 'g9', 'g4', 'g8'], 'Moderate Probability TB - Further Testing Required', 0.68],
+      ['r8', ['g1', 'g6', 'g7'], 'Possible TB - Medical Consultation Recommended', 0.60],
+      ['r9', ['g4', 'g5', 'g8'], 'Possible TB - Medical Consultation Recommended', 0.55],
+      ['r10', ['g1', 'g3', 'g12'], 'Possible TB - Medical Consultation Recommended', 0.58],
+      ['r11', ['g15', 'g6', 'g4', 'g5'], 'Possible Extrapulmonary TB (Spinal) - Specialist Required', 0.75],
+      ['r12', ['g10', 'g6', 'g4', 'g5'], 'Possible Extrapulmonary TB (Lymphatic) - Specialist Required', 0.72],
+      ['r13', ['g1', 'g6', 'g14'], 'Possible Acute Respiratory Infection (not TB)', 0.65],
+      ['r14', ['g1', 'g3', 'g9'], 'Possible Bronchitis or Pneumonia (not TB)', 0.60],
+      ['r15', ['g6', 'g7', 'g8'], 'Possible Chronic Infection (non-TB)', 0.50],
+      ['r16', ['g1', 'g12'], 'Common Cold or Mild Respiratory Infection', 0.45]
+    ];
+
+    // ==================== STATE MANAGEMENT ====================
+    const state = {
+      symptoms: {},
+      selectedCount: 0
+    };
+
+    // ==================== UI INITIALIZATION ====================
+    function initializeUI() {
+      // Group symptoms by category
+      const categories = {
+        primary: [],
+        respiratory: [],
+        systemic: [],
+        risk: []
+      };
+
+      SYMPTOMS.forEach(([id, desc, base, category]) => {
+        categories[category].push({ id, desc, base });
+        state.symptoms[id] = false;
+      });
+
+      // Render each category
+      Object.keys(categories).forEach(category => {
+        const container = document.getElementById(`category-${category}`);
+        categories[category].forEach(symptom => {
+          const item = createSymptomItem(symptom);
+          container.appendChild(item);
+        });
+      });
+
+      updateSymptomCount();
+    }
+
+    function createSymptomItem({ id, desc }) {
+      const div = document.createElement('div');
+      div.className = 'symptom-item';
+      div.dataset.id = id;
+      div.innerHTML = `
+        <div class="symptom-info">
+          <div class="symptom-id">${id}</div>
+          <div class="symptom-desc">${desc}</div>
+        </div>
+        <div class="toggle-switch"></div>
+      `;
+
+      div.addEventListener('click', () => toggleSymptom(id));
+      return div;
+    }
+
+    function toggleSymptom(id) {
+      state.symptoms[id] = !state.symptoms[id];
+      const item = document.querySelector(`[data-id="${id}"]`);
+      item.classList.toggle('active');
+      updateSymptomCount();
+    }
+
+    function updateSymptomCount() {
+      state.selectedCount = Object.values(state.symptoms).filter(v => v).length;
+      document.getElementById('symptomCount').textContent = `${state.selectedCount} / 15 Selected`;
+    }
+
+    // ==================== DIAGNOSIS ENGINE ====================
+    function runDiagnosis() {
+      const btn = document.getElementById('diagBtn');
+      const spinner = document.getElementById('spinner');
+
+      // Show loading state
+      btn.disabled = true;
+      spinner.classList.remove('hidden');
+
+      setTimeout(() => {
+        // Gather user answers
+        const userCF = {};
+        SYMPTOMS.forEach(([id, desc, base]) => {
+          userCF[id] = state.symptoms[id] ? base : 0.0;
+        });
+
+        // Evaluate rules
+        const matches = [];
+        RULES.forEach(([rid, slist, diag, rCF]) => {
+          const cfs = [];
+          let allPresent = true;
+
+          for (const s of slist) {
+            const cf = userCF[s] || 0.0;
+            if (cf <= 0.0) {
+              allPresent = false;
+              break;
+            }
+            cfs.push(cf);
+          }
+
+          if (!allPresent) return;
+
+          const sum = cfs.reduce((a, b) => a + b, 0);
+          const avg = sum / cfs.length;
+          const final = rCF * avg * 100.0;
+
+          matches.push({
+            rule: rid,
+            diagnosis: diag,
+            ruleCF: rCF,
+            symptomAvg: avg,
+            finalCF: final
+          });
+        });
+
+        // Sort by certainty
+        matches.sort((a, b) => b.finalCF - a.finalCF);
+
+        // Display results
+        displayResults(matches);
+
+        // Hide loading state
+        btn.disabled = false;
+        spinner.classList.add('hidden');
+      }, 800);
+    }
+
+    function displayResults(matches) {
+      const output = document.getElementById('output');
+
+      if (matches.length === 0) {
+        output.innerHTML = `
+          <div class="card">
+            <div class="result-header">
+              <h3>No Matching Diagnosis</h3>
+            </div>
+            <p style="text-align: center; font-size: 18px; color: var(--text-secondary); padding: var(--spacing-xl);">
+              No diagnostic rules were fully matched based on the selected symptoms. 
+              Please consult a healthcare professional for proper evaluation.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '<div class="card results-container">';
+      html += '<div class="result-header"><h3>📋 Diagnostic Results</h3><p>Based on symptom analysis and rule evaluation</p></div>';
+      html += '<div class="download-section"><button class="btn btn-download" onclick="downloadResults()"><span>💾</span><span>Download Results</span></button></div>';
+
+      matches.forEach((m, i) => {
+        const severity = getSeverityClass(m.finalCF);
+        const icon = getSeverityIcon(m.finalCF);
+
+        html += `
+          <div class="result-item ${severity}">
+            <div class="result-diagnosis">${i + 1}. ${m.diagnosis}</div>
+            <div class="result-metrics">
+              <div class="metric">
+                <div class="metric-label">Rule ID</div>
+                <div class="metric-value">${m.rule}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Rule CF</div>
+                <div class="metric-value">${m.ruleCF.toFixed(2)}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Symptom Avg</div>
+                <div class="metric-value">${m.symptomAvg.toFixed(2)}</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Final Certainty</div>
+                <div class="metric-value">${m.finalCF.toFixed(1)}%</div>
+              </div>
+            </div>
+            <div class="certainty-bar">
+              <div class="certainty-fill" style="width: ${m.finalCF}%"></div>
+            </div>
+            <div class="recommendation">
+              <span class="recommendation-icon">${icon}</span>
+              <span>${getRecommendation(m.finalCF)}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      output.innerHTML = html;
+
+      // Scroll to results
+      output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function getSeverityClass(percent) {
+      if (percent >= 80) return 'critical';
+      if (percent >= 65) return 'high';
+      if (percent >= 50) return 'moderate';
+      return 'low';
+    }
+
+    function getSeverityIcon(percent) {
+      if (percent >= 80) return '🚨';
+      if (percent >= 65) return '⚠️';
+      if (percent >= 50) return '⚡';
+      return 'ℹ️';
+    }
+
+    function getRecommendation(percent) {
+      if (percent >= 80) return 'URGENT: Seek immediate medical attention! High probability of active TB.';
+      if (percent >= 65) return 'HIGH PRIORITY: Schedule medical consultation soon.';
+      if (percent >= 50) return 'MODERATE: Medical consultation advised.';
+      return 'LOW PROBABILITY: Monitor symptoms and consult if they persist.';
+    }
+
+    // ==================== DOWNLOAD FUNCTIONALITY ====================
+    function downloadResults() {
+      const patientId = document.getElementById('patientId').value || 'N/A';
+      const patientAge = document.getElementById('patientAge').value || 'N/A';
+      const patientGender = document.getElementById('patientGender').value || 'N/A';
+
+      // Get selected symptoms
+      const selectedSymptoms = [];
+      SYMPTOMS.forEach(([id, desc, base]) => {
+        if (state.symptoms[id]) {
+          selectedSymptoms.push(`  - [${id}] ${desc} (CF: ${base})`);
+        }
+      });
+
+      // Get diagnosis results from the current display
+      const resultItems = document.querySelectorAll('.result-item');
+      let diagnosisText = '';
+
+      resultItems.forEach((item, index) => {
+        const diagnosis = item.querySelector('.result-diagnosis').textContent;
+        const metrics = item.querySelectorAll('.metric-value');
+        const recommendation = item.querySelector('.recommendation span:last-child').textContent;
+
+        diagnosisText += `\n${diagnosis}\n`;
+        diagnosisText += `   Rule ID: ${metrics[0].textContent}\n`;
+        diagnosisText += `   Rule CF: ${metrics[1].textContent}\n`;
+        diagnosisText += `   Symptom Avg: ${metrics[2].textContent}\n`;
+        diagnosisText += `   Final Certainty: ${metrics[3].textContent}\n`;
+        diagnosisText += `   Recommendation: ${recommendation}\n`;
+      });
+
+      // Create the file content
+      const currentDate = new Date().toLocaleString();
+      const fileContent = `
+═══════════════════════════════════════════════════════════════
+              TB EXPERT SYSTEM - DIAGNOSTIC REPORT
+═══════════════════════════════════════════════════════════════
+
+Generated: ${currentDate}
+
+───────────────────────────────────────────────────────────────
+PATIENT INFORMATION
+───────────────────────────────────────────────────────────────
+Patient ID: ${patientId}
+Age: ${patientAge}
+Gender: ${patientGender}
+
+───────────────────────────────────────────────────────────────
+SELECTED SYMPTOMS (${selectedSymptoms.length} total)
+───────────────────────────────────────────────────────────────
+${selectedSymptoms.join('\n')}
+
+───────────────────────────────────────────────────────────────
+DIAGNOSTIC RESULTS
+───────────────────────────────────────────────────────────────
+${diagnosisText}
+
+───────────────────────────────────────────────────────────────
+MEDICAL DISCLAIMER
+───────────────────────────────────────────────────────────────
+⚠️  This tool is for educational purposes only and is not a 
+medical device. Always consult a qualified healthcare 
+professional for proper diagnosis and treatment.
+
+───────────────────────────────────────────────────────────────
+TB Expert System v2.0 — Powered by Karimi
+Based on clinical guidelines and certainty factor methodology
+© 2025 AI Research. For research and educational use only.
+═══════════════════════════════════════════════════════════════
+      `.trim();
+
+      // Create and download the file
+      const blob = new Blob([fileContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `TB_Diagnosis_${patientId.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function resetAll() {
+      // Reset state
+      Object.keys(state.symptoms).forEach(id => {
+        state.symptoms[id] = false;
+      });
+
+      // Reset UI
+      document.querySelectorAll('.symptom-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Clear results
+      document.getElementById('output').innerHTML = '';
+
+      // Clear patient info
+      document.getElementById('patientId').value = '';
+      document.getElementById('patientAge').value = '';
+      document.getElementById('patientGender').value = '';
+
+      updateSymptomCount();
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById('diagBtn').addEventListener('click', runDiagnosis);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+    // ==================== INITIALIZE ====================
+    initializeUI();
+  </script>
+</body>
+
+</html>
